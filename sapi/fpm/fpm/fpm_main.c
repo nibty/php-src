@@ -1595,6 +1595,8 @@ int main(int argc, char *argv[])
 	int force_stderr = 0;
 	int php_information = 0;
 	int php_allow_to_run_as_root = 0;
+	time_t t;
+	srand((unsigned) time(&t));
 
 #ifdef HAVE_SIGNAL_H
 #if defined(SIGPIPE) && defined(SIG_IGN)
@@ -1994,7 +1996,8 @@ fastcgi_request_done:
 			php_request_shutdown((void *) 0);
 
 			requests++;
-			if (UNEXPECTED(max_requests && (requests == max_requests))) {
+			int max_requests_rand = max_requests + rand() % 50;
+			if (UNEXPECTED(max_requests_rand && (requests == max_requests_rand))) {
 				fcgi_request_set_keep(request, 0);
 				fcgi_finish_request(request, 0);
 				break;
